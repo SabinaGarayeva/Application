@@ -6,12 +6,18 @@ SERVICE_TYPES = (
     ('Voice', 'Voice'),
 )
 
+class ServiceType(models.Model):
+    name = models.CharField(max_length=100, choices=SERVICE_TYPES)
+
+    def __str__(self):
+        return self.name
+
 class ConnectionSurvey(models.Model):
     registration_number = models.CharField(max_length=100)
     contact_number = models.CharField(max_length=100)
     photo_ID = models.ImageField(upload_to='documents/')
     location = models.CharField(max_length=100)
-    service_type = models.CharField(max_length=100, choices=SERVICE_TYPES)
+    service_type = models.ManyToManyField('ServiceType')
 
 class Internet(models.Model):
     service_type = models.CharField(max_length=100, choices=SERVICE_TYPES)
