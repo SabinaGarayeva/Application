@@ -1,4 +1,6 @@
 from django.db import models
+from accounts.models import Office_Manager
+
 
 TASK_TYPES = (
     ('connection', 'connection'),
@@ -7,14 +9,16 @@ TASK_TYPES = (
 
 
 class Task(models.Model):
+    Office_Manager = models.ForeignKey(Office_Manager, on_delete=models.CASCADE)
     task_type = models.CharField(max_length=100, choices=TASK_TYPES)
+    description = models.TextField()
     registration_number = models.CharField(max_length=100)
     contact_number = models.CharField(max_length=100)
     photo_ID = models.ImageField(upload_to='photo_id/')
     location = models.CharField(max_length=100)  
 
     def __str__(self):
-        return self.task_type
+        return self.description
 
 
 
@@ -26,6 +30,9 @@ class Internet(models.Model):
     fastconnector = models.CharField(max_length=100)
     siqnal = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.task
+
 
 class TV(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='tv')
@@ -35,6 +42,8 @@ class TV(models.Model):
     f_connector = models.CharField(max_length=100)
     splitter = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.task
 
 class Voice(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='voice')
@@ -43,3 +52,19 @@ class Voice(models.Model):
     home_number = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.task
+
+
+# plumber tasks
+
+class PlumberTask(models.Model):
+    Office_Manager = models.ForeignKey(Office_Manager, on_delete= models.CASCADE)
+    equipment = models.CharField(max_length=200)
+    brand = models.CharField(max_length=200)
+    model = models.CharField(max_length=200)
+    count =  models.IntegerField()
+    date = models.DateField()
+
+    def __str__(self):
+        return self.equipment
