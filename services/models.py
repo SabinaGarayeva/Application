@@ -9,21 +9,21 @@ TASK_TYPES = (
 )
 
 status_task = (
+    ("waiting", 'waiting'),
     ("inprogress", "inprogress"),
     ("started", "started"),
     ("completed", "completed"),
 )
 
 class Status(models.Model):
-    status = models.CharField(max_length=100, choices=status_task)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True,blank=True)
 
-    def __str__(self):
-        return self.status
+    class Meta:
+        abstract = True
 
 
-class Task(models.Model):
+class Task(Status):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     task_type = models.CharField(max_length=100, choices=TASK_TYPES)
     description = models.TextField()
@@ -31,11 +31,14 @@ class Task(models.Model):
     contact_number = models.CharField(max_length=100)
     photo_ID = models.ImageField(upload_to='photo_id/')
     location = models.CharField(max_length=100)  
-    status = models.ForeignKey(Status, on_delete=models.CASCADE, blank=True, null=True)
+    note = models.CharField(max_length=300)
+    date = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, choices=status_task,null=True,blank=True)
 
     def __str__(self):
         return self.description
-    
+ 
+
     def is_service(self):
         return hasattr(self, 'internet') and hasattr(self, 'tv') and hasattr(self, 'voice')
 
@@ -48,7 +51,6 @@ class Task(models.Model):
         if hasattr(self, 'voice'):
             services.append('Voice')
         return services
-    
 
 
 class Internet(models.Model):
@@ -59,9 +61,6 @@ class Internet(models.Model):
     fastconnector = models.CharField(max_length=100)
     siqnal = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.task
-
 
 class TV(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='tv')
@@ -71,8 +70,6 @@ class TV(models.Model):
     f_connector = models.CharField(max_length=100)
     splitter = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.task
 
 class Voice(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='voice')
@@ -81,11 +78,6 @@ class Voice(models.Model):
     home_number = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.task
-
-
-# plumber tasks
 
 class PlumberTask(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
@@ -98,8 +90,3 @@ class PlumberTask(models.Model):
     def __str__(self):
         return self.equipment
     
-
-# class TaskDetails(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     status = models.CharField(max_length=100, choices=status_task)
-    # map = models.PointField(help_text="Use map widget for point the house location")

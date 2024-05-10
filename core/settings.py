@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'mapwidgets',
+    'drf_yasg',
+    'rest_framework',
+    'django_filters',
     #myapps
     'accounts',
     "services",
@@ -73,6 +76,14 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK={
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
+    ]
+}
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
