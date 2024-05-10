@@ -2,24 +2,26 @@
 from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, full_name, username, phone, role, region, group, password=None, **extra_fields):
+    def create_user(self, email, first_name, last_name, username, phone, role, region, group, password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')
-        if not full_name:
-            raise ValueError('The Full Name field must be set')
+        if not first_name:
+            raise ValueError('The First Name field must be set')
+        if not last_name:
+            raise ValueError('The Last Name field must be set')
         if not username:
             raise ValueError('The Username field must be set')
         if not phone:
             raise ValueError('The Phone field must be set')
         if not role:
-            raise ValueError('The Phone field must be set')
+            raise ValueError('The Role field must be set')
         if not region:
             raise ValueError('The Phone field must be set')
         if not group:
             raise ValueError('The Phone field must be set')
 
         email = self.normalize_email(email)
-        user = self.model(email=email, full_name=full_name, username=username, phone=phone, **extra_fields)
+        user = self.model(email=email, first_name=first_name, last_name=last_name, username=username, phone=phone, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user

@@ -14,13 +14,13 @@ USER_TYPE = (
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    full_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     username = models.CharField(max_length=30, unique=True)
     phone = PhoneNumberField()
     user_type = models.CharField(max_length=20, choices=USER_TYPE)
-    role = models.CharField(max_length=200)
-    region = models.CharField(max_length=200)
-    group = models.IntegerField()
+    # region = models.CharField(max_length=200)
+    # group = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ("username", "full_name", "phone", "user_type", "role", "region", "groups")
 
     def __str__(self):
-        return self.full_name
+        return self.first_name
 
     @property
     def is_technician(self):
@@ -63,45 +63,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_tech_manager(self):
         return self.user_type == "tech_manager"
 
-
-class Technician(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='technician')
-
-    def __str__(self):
-        return self.user.full_name
-    def save(self, *args, **kwargs):
-        
-        self.user.save()
-        super(Technician, self).save(*args, **kwargs)
-
-
-
-class Plumber(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='plumber')
+class Group(models.Model):
+    group = models.CharField(max_length=200)
+    region = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
 
     def __str__(self):
-        return self.user.full_name
-    def save(self, *args, **kwargs):
-        
-        self.user.save()
-        super(Plumber, self).save(*args, **kwargs)
-
-class Office_Manager(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='office_manager')
-
-    def __str__(self):
-        return self.user.full_name
-    def save(self, *args, **kwargs):
-        
-        self.user.save()
-        super(Office_Manager, self).save(*args, **kwargs)
-
-class Tech_Manager(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='tech_manager')
-
-    def __str__(self):
-        return self.user.full_name
-    def save(self, *args, **kwargs):
-        
-        self.user.save()
-        super(Tech_Manager, self).save(*args, **kwargs)
+        return self.group
