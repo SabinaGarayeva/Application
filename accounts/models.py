@@ -13,6 +13,9 @@ USER_TYPE = (
     ("tech_manager", "tech_manager"),
 )
 
+AUTH_PROVIDERS ={'email':'email'}
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=255)
@@ -42,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ("username", "first_name", "last_name", "phone", "user_type")
+    REQUIRED_FIELD = "username"
 
     def tokens(self):    
         refresh = RefreshToken.for_user(self)
