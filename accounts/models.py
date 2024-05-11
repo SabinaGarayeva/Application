@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import Group, Permission
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 USER_TYPE = (
@@ -19,12 +20,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     phone = PhoneNumberField()
     user_type = models.CharField(max_length=20, choices=USER_TYPE)
-    # region = models.CharField(max_length=200)
-    # group = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     groups = models.ManyToManyField(
         Group,
         verbose_name=('groups'),
@@ -42,10 +42,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ("username", "full_name", "phone", "user_type", "role", "region", "groups")
+    REQUIRED_FIELDS = ("username", "first_name", "last_name", "phone", "user_type")
+
+    def tokens(self):    
+        refresh = RefreshToken.for_user(self)
+        return {
+            "refresh":str(refresh),
+            "access":str(refresh.access_token)
+        }
+
 
     def __str__(self):
-        return self.first_name
+        return self.email
+
+    @property
+    def get_full_name(self):
+        return f"{self.first_name.title()} {self.last_name.title()}"
 
     @property
     def is_technician(self):
@@ -63,6 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_tech_manager(self):
         return self.user_type == "tech_manager"
 
+
 class Group(models.Model):
     group = models.CharField(max_length=200)
     region = models.CharField(max_length=200)
@@ -70,3 +83,11 @@ class Group(models.Model):
 
     def __str__(self):
         return self.group
+    
+class OneTimePassword(models.Model):
+    user=models.OneToOneField(User, on_delete=models.CASCADE)
+    otp=models.CharField(max_length=6)
+
+
+    def __str__(self):
+        return f"{self.user.first_name} - otp code"
