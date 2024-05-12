@@ -32,10 +32,12 @@ class TaskListAPIView(generics.ListAPIView):
 
         connection_completed_count = queryset.filter(task_type='connection', status='completed').count()
         problem_completed_count = queryset.filter(task_type='problem', status='completed').count()
+        completed_count = queryset.filter(status='completed').count()
 
         context = {
             'connection_completed_count': connection_completed_count,
-            'problem_completed_count': problem_completed_count
+            'problem_completed_count': problem_completed_count,
+            'completed_count' : completed_count
         }
 
         serializer = self.get_serializer(queryset, many=True)
