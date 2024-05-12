@@ -40,6 +40,14 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Application definition
 
+CKEDITOR_CONFIGS = {
+    "default": {
+        "versionCheck": False
+    }
+}
+
+SILENCED_SYSTEM_CHECKS = ['ckeditor.W001']
+
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -246,5 +254,3 @@ LOGGING = {
         "django": {"handlers": ["console"], "level": "INFO"},
     },
 }
-
-
