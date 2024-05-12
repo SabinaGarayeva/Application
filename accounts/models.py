@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username", "first_name", "last_name", "phone", "user_type"]
+    REQUIRED_FIELD = "username"
 
     def tokens(self):    
         refresh = RefreshToken.for_user(self)
@@ -94,3 +94,5 @@ class OneTimePassword(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} - otp code"
+    
+    
