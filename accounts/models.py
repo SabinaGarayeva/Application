@@ -1,10 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import Group, Permission
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+import re
 
+def validate_phone_number(value):
+    if not re.match(r'^[\d()+-]+$', value):
+        raise ValidationError(_('Invalid phone number format'))
 
 USER_TYPE = (
     ("technician", "technician"),
@@ -21,7 +26,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     username = models.CharField(max_length=30, unique=True)
-    phone = PhoneNumberField()
+    phone = models.CharField(max_length=15, validators=[validate_phone_number])
     user_type = models.CharField(max_length=20, choices=USER_TYPE)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
@@ -77,7 +82,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_tech_manager(self):
         return self.user_type == "tech_manager"
-
+    
 
 class Group(models.Model):
     group = models.CharField(max_length=200)
@@ -94,5 +99,4 @@ class OneTimePassword(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} - otp code"
-    
     

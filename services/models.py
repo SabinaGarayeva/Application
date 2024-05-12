@@ -3,6 +3,7 @@ from accounts.models import User
 # from django.contrib.gis.db import models
 
 
+
 TASK_TYPES = (
     ('connection', 'connection'),
     ('problem', 'problem'),
@@ -51,7 +52,7 @@ class Task(Status):
         if hasattr(self, 'voice'):
             services.append('Voice')
         return services
-
+    
 
 class Internet(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='internet')
