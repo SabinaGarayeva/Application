@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-dj@g@p0zq76f6=wplo@znnuzclq4v=($p=ky@+x=$rx!9as@f2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -92,11 +92,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 AUTH_USER_MODEL='accounts.User'
 
 REST_FRAMEWORK={
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
-        'rest_framework.parsers.JSONParser',
-    ],
     'NON_FIELD_ERRORS_KEY':'error',
         'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -181,12 +176,12 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = '/mediafiles/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles/')
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Default primary key field type

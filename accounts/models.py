@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELD = "username"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name", "phone", "user_type"]
 
     def tokens(self):    
         refresh = RefreshToken.for_user(self)
