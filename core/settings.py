@@ -49,7 +49,6 @@ CKEDITOR_CONFIGS = {
 SILENCED_SYSTEM_CHECKS = ['ckeditor.W001']
 
 INSTALLED_APPS = [
-    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
