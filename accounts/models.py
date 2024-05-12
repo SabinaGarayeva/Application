@@ -3,13 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
 from django.contrib.auth.models import Group, Permission
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
-import re
+from .validators import validate_phone_number
 
-def validate_phone_number(value):
-    if not re.match(r'^[\d()+-]+$', value):
-        raise ValidationError(_('Invalid phone number format'))
 
 USER_TYPE = (
     ("technician", "technician"),
