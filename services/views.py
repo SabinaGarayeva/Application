@@ -45,3 +45,15 @@ class TaskListAPIView(generics.ListAPIView):
         response_data.append(context)
 
         return Response(response_data, status=status.HTTP_200_OK)
+    
+
+class UserTaskListView(ListAPIView):
+    serializer_class = TaskDetailSerializer
+
+    serializer_class = TaskDetailSerializer
+
+    def get_queryset(self):
+        queryset = Task.objects.filter(status='completed') | Task.objects.filter(status='waiting')
+
+        return queryset
+    

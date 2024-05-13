@@ -15,6 +15,13 @@ USER_TYPE = (
 
 AUTH_PROVIDERS ={'email':'email'}
 
+class Group(models.Model):
+    group = models.CharField(max_length=200)
+    region = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.group
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -23,6 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     phone = models.CharField(max_length=15, validators=[validate_phone_number])
     user_type = models.CharField(max_length=20, choices=USER_TYPE)
+    group = models.ForeignKey(Group, on_delete = models.CASCADE, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -79,13 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.user_type == "tech_manager"
     
 
-class Group(models.Model):
-    group = models.CharField(max_length=200)
-    region = models.CharField(max_length=200)
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
 
-    def __str__(self):
-        return self.group
     
 class OneTimePassword(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE)

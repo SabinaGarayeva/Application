@@ -53,6 +53,7 @@ class Task(Status):
             services.append('Voice')
         return services
     
+    
 
 class Internet(models.Model):
     task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='internet')

@@ -1,6 +1,6 @@
 import json
 from dataclasses import field
-from .models import User
+from .models import User, Group
 from rest_framework import serializers
 from string import ascii_lowercase, ascii_uppercase
 from django.contrib.auth import authenticate
@@ -149,3 +149,4 @@ class LogoutUserSerializer(serializers.Serializer):
 
 class VerifyUserEmailSerializer(serializers.Serializer):
     otp = serializers.CharField(max_length=6)
+

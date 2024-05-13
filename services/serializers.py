@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Task, Internet, Voice, TV
+from accounts.models import User
 
 class InternetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,3 +42,8 @@ class TaskDetailSerializer(serializers.ModelSerializer):
         if hasattr(obj, 'voice'):
             services.append('Voice')
         return services
+    
+class UserTaskSerializer(serializers.Serializer):
+    tasks = TaskDetailSerializer()
+    model = User
+    fields = '__all__'
