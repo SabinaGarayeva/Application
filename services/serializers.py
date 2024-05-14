@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, viewsets
 from .models import Task, Internet, Voice, TV
 from accounts.models import User
 
@@ -22,6 +22,10 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = ['id', 'registration_number', 'note', 'date', 'status', 'contact_number']
 
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
 class TaskDetailSerializer(serializers.ModelSerializer):
     tv = TVSerializer()
     internet = InternetSerializer()
@@ -43,7 +47,3 @@ class TaskDetailSerializer(serializers.ModelSerializer):
             services.append('Voice')
         return services
     
-class UserTaskSerializer(serializers.Serializer):
-    tasks = TaskDetailSerializer()
-    model = User
-    fields = '__all__'

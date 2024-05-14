@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     # 'mapwidgets',
     'drf_yasg',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
@@ -124,6 +125,7 @@ REST_FRAMEWORK={
     'rest_framework.authentication.SessionAuthentication',
     'rest_framework.authentication.BasicAuthentication',
     'rest_framework_simplejwt.authentication.JWTAuthentication', 
+    'rest_framework.authentication.TokenAuthentication',
     ),
 }
 

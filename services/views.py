@@ -6,6 +6,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from accounts.models import User
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+
 
 class CreateTaskView(generics.CreateAPIView):
     serializer_class = TaskSerializer
@@ -48,12 +53,10 @@ class TaskListAPIView(generics.ListAPIView):
     
 
 class UserTaskListView(ListAPIView):
-    serializer_class = TaskDetailSerializer
-
-    serializer_class = TaskDetailSerializer
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
-        queryset = Task.objects.filter(status='completed') | Task.objects.filter(status='waiting')
-
-        return queryset
-    
+        user = self.request.user
+        return Task.objects.filter(user=user)
