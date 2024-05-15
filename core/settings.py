@@ -49,6 +49,7 @@ CKEDITOR_CONFIGS = {
 SILENCED_SYSTEM_CHECKS = ['ckeditor.W001']
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'corsheaders',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     #myapps
     'accounts',
@@ -75,6 +77,7 @@ SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -116,17 +119,19 @@ WSGI_APPLICATION = 'core.wsgi.application'
 AUTH_USER_MODEL='accounts.User'
 
 REST_FRAMEWORK={
-    'NON_FIELD_ERRORS_KEY':'error',
-        'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (  
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.BasicAuthentication',
-    'rest_framework_simplejwt.authentication.JWTAuthentication', 
-    'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication', 
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAdminUser'
+    ],
+    'NON_FIELD_ERRORS_KEY':'error',
+    
+    
 }
 
 
@@ -147,9 +152,20 @@ DATABASES = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    'JTI_CLAIM': 'jti',
+
 }
 
 DOMAIN='localhost:3000'
@@ -185,13 +201,43 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+from django.utils.translation import gettext_lazy as _
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'az'
+
+MODELTRANSLATION_LANGUAGES = ('az', 'en')
+
+
+
+LANGUAGES = [
+    ('az', _('Azerbaijani')),
+    ('en', _('English')),
+]
+
+LANGUAGE_CODE = 'az-AZ'
+DEFAULT_LANGUAGE = True
+
+PARLER_LANGUAGES = {
+    None : (
+        {'code': 'az',},
+        {'code': 'en',},
+    ),
+    'default': {
+        'fallbacks': ['az'],
+        'hide_untranslated': False,
+    }
+}
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+
 USE_TZ = True
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
 
 
 # Static files (CSS, JavaScript, Images)

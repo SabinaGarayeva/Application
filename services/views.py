@@ -13,7 +13,7 @@ from rest_framework.authentication import TokenAuthentication
 
 
 class CreateTaskView(generics.CreateAPIView):
-    serializer_class = TaskSerializer
+    serializer_class = TaskDetailSerializer
 
 
 class TaskListView(ListAPIView):
@@ -32,6 +32,17 @@ class TaskListAPIView(generics.ListAPIView):
     filterset_class = StatusAndTaskFilter
     filter_backends = (DjangoFilterBackend,)
 
+    
+
+class UserTaskListView(ListAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Task.objects.filter(user=user)
+    
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -50,13 +61,3 @@ class TaskListAPIView(generics.ListAPIView):
         response_data.append(context)
 
         return Response(response_data, status=status.HTTP_200_OK)
-    
-
-class UserTaskListView(ListAPIView):
-    serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Task.objects.filter(user=user)

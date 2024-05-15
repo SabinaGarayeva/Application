@@ -25,6 +25,7 @@ class TaskSerializer(serializers.ModelSerializer):
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    
 
 class TaskDetailSerializer(serializers.ModelSerializer):
     tv = TVSerializer()
@@ -35,15 +36,9 @@ class TaskDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'user', 'task_type', 'description', 'registration_number', 'contact_number', 'photo_ID', 'location', 'note', 'date', 'status', 'services', 'tv', 'voice', 'internet']
+        fields = ['id', 'user', 'task_type', 'description', 'registration_number', 'contact_number', 'photo_ID', 'location', 'note', 'date', 'status', 'tv', 'voice', 'internet', 'services']
 
     def get_services(self, obj):
-        services = []
-        if hasattr(obj, 'internet'):
-            services.append('Internet')
-        if hasattr(obj, 'tv'):
-            services.append('TV')
-        if hasattr(obj, 'voice'):
-            services.append('Voice')
-        return services
+        return obj.get_service()
+
     

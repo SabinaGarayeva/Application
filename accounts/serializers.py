@@ -129,23 +129,35 @@ class SetNewPasswordSerializer(serializers.Serializer):
 
 
     
+from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.exceptions import TokenError
+
 class LogoutUserSerializer(serializers.Serializer):
     refresh_token = serializers.CharField()
+    access_token = serializers.CharField()
 
     default_error_messages = {
         'bad_token': 'Token is expired or invalid'
     }
 
     def validate(self, attrs):
-        self.token = attrs.get('refresh_token')
+        self.refresh_token = attrs.get('refresh_token')
+        self.access_token = attrs.get('access_token')
         return attrs
 
     def save(self, **kwargs):
         try:
-            token = RefreshToken(self.token)
-            token.blacklist()
-        except Exception as e:
+            refresh_token = RefreshToken(self.refresh_token)
+            refresh_token.blacklist()
+            
+            access_token = AccessToken(self.access_token)
+            access_token.blacklist()
+
+        except TokenError:
             self.fail('bad_token')
+
+
 
 class VerifyUserEmailSerializer(serializers.Serializer):
     otp = serializers.CharField(max_length=6)

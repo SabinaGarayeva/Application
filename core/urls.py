@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path,include, re_path
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -23,7 +23,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.routers import DefaultRouter
-
+from django.conf.urls.i18n import i18n_patterns
+from django.views.i18n import JavaScriptCatalog
 
 router = DefaultRouter()
 
@@ -53,6 +54,10 @@ urlpatterns = [
     ),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path('docs<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('pages/', include('django.contrib.flatpages.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
+        re_path(r'^rosetta/', include('rosetta.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, 

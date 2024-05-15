@@ -34,24 +34,23 @@ class Task(Status):
     location = models.CharField(max_length=100)  
     note = models.CharField(max_length=300)
     date = models.CharField(max_length=100)
-    status = models.CharField(max_length=100, choices=status_task,null=True,blank=True)
+    status = models.CharField(max_length=100, choices=status_task, default='waiting')
 
     def __str__(self):
         return self.description
  
 
     def is_service(self):
-        return hasattr(self, 'internet') and hasattr(self, 'tv') and hasattr(self, 'voice')
+        return hasattr(self, 'internet') or hasattr(self, 'tv') or hasattr(self, 'voice')
 
     def get_service(self):
-        services = []
-        if hasattr(self, 'internet'):
-            services.append('Internet')
-        if hasattr(self, 'tv'):
-            services.append('TV')
-        if hasattr(self, 'voice'):
-            services.append('Voice')
-        return services
+        if hasattr(self, 'internet') and self.internet:
+            return 'Internet'
+        if hasattr(self, 'tv') and self.tv:
+            return 'TV'
+        if hasattr(self, 'voice') and self.voice:
+            return 'Voice'
+        return None
     
     
 
@@ -84,8 +83,7 @@ class Voice(models.Model):
 class PlumberTask(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     equipment = models.CharField(max_length=200)
-    brand = models.CharField(max_length=200)
-    model = models.CharField(max_length=200)
+    type = models.CharField(max_length=200)
     count =  models.IntegerField()
     date = models.DateField()
 
