@@ -6,33 +6,33 @@ from django.utils.translation import get_language
 from modeltranslation.admin import TranslationAdmin
 
 
-class TaskAdminForm(forms.ModelForm):
-    task_type = forms.ChoiceField(choices=(), required=False)
+# class TaskAdminForm(forms.ModelForm):
+#     task_type = forms.ChoiceField(choices=(), required=False)
 
-    class Meta:
-        model = Task
-        fields = '__all__'
+#     class Meta:
+#         model = Task
+#         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super(TaskAdminForm, self).__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         super(TaskAdminForm, self).__init__(*args, **kwargs)
 
-        language = get_language()
-        if language == 'az':
-            choices = (
-                ('connection', _('Qoşulma')),
-                ('problem', _('Problem')),
-            )
-        elif language == 'en-US':
-            choices = (
-                ('connection', _('Connection')),
-                ('problem', _('Problem')),
-            )
+#         language = get_language()
+#         if language == 'az':
+#             choices = (
+#                 ('connection', _('Qoşulma')),
+#                 ('problem', _('Problem')),
+#             )
+#         elif language == 'en-US':
+#             choices = (
+#                 ('connection', _('Connection')),
+#                 ('problem', _('Problem')),
+#             )
 
-        self.fields['task_type'].choices = choices
+#         self.fields['task_type'].choices = choices
 
 @admin.register(Task)
 class TaskAdmin(TranslationAdmin):
-    form = TaskAdminForm
+    # form = TaskAdminForm
     list_display = ("description",)
     class Media:
 
