@@ -28,9 +28,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     
 
 class TaskDetailSerializer(serializers.ModelSerializer):
-    # tv = TVSerializer()
-    # internet = InternetSerializer()
-    # voice = VoiceSerializer()
+    tv = TVSerializer()
+    internet = InternetSerializer()
+    voice = VoiceSerializer()
 
     services = serializers.SerializerMethodField()
 
