@@ -10,6 +10,7 @@ from rest_framework.authtoken.models import Token
 from accounts.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from django.db.models import Q
 
 
 class CreateTaskView(generics.CreateAPIView):
@@ -41,7 +42,9 @@ class UserTaskListView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Task.objects.filter(user=user)
+        queryset = Task.objects.filter(user = user)
+        return queryset
+    
     
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -53,11 +56,13 @@ class UserTaskListView(ListAPIView):
         context = {
             'connection_completed_count': connection_completed_count,
             'problem_completed_count': problem_completed_count,
-            'completed_count' : completed_count
+            'completed_count': completed_count
         }
 
         serializer = self.get_serializer(queryset, many=True)
-        response_data = serializer.data
-        response_data.append(context)
+        response_data = {
+            'tasks': serializer.data,
+            'summary': context
+        }
 
         return Response(response_data, status=status.HTTP_200_OK)

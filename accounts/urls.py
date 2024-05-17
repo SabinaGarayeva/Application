@@ -8,10 +8,12 @@ from .views import (
         PasswordResetConfirm, 
         PasswordResetRequestView,SetNewPasswordView, LogoutApiView, delete_user)
 
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
+    path('gettoken/', TokenObtainPairView.as_view(), name='gettoken'),
+
     path('login/', LoginUserView.as_view(), name='login-user'),
     path('verify-email/', VerifyUserEmail.as_view(), name='verify'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
