@@ -13,9 +13,13 @@
   list-style: none;
 }
 
-/* body {
-  background-color: #2B75CC;
-} */
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+.nunito-sans {
+  font-family: "Nunito Sans", sans-serif;
+}
 
 
 
