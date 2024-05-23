@@ -18,6 +18,14 @@ function Login() {
 
   const login = async (e) => {
     e.preventDefault();
+
+
+    if (!user.email || !user.password) {
+      alert('Please fill in both email and password.');
+      return;
+    }
+
+
     await fetch("http://135.181.42.192/accounts/login/", {
       method: "POST",
       headers: {
@@ -37,7 +45,7 @@ function Login() {
         localStorage.setItem("refresh_token", data.refresh_token);
       });
 
-     
+      navigate('/');
   };
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
