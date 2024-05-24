@@ -33,7 +33,7 @@ console.log(mainData.meetings,'-0---------')
     getData();
   }, []);
   return (
-    <div className="container">
+    <div className="container w-[80%]">
      <div className="flex mt-[30px] gap-7">
      <Card data={mainData.meetings} />
      </div>

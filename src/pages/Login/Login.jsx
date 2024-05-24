@@ -4,7 +4,7 @@ import { fetchTasks } from "../../features/tasks/taskSlice";
 import mail from "../../assets/mail-icon.svg";
 import password from "../../assets/password-icon.svg";
 import { useNavigate } from "react-router-dom";
-import oval from "../../assets/oval.svg"
+import oval from "../../assets/oval.svg";
 
 function Login() {
   const [user, setUser] = useState({
@@ -14,45 +14,53 @@ function Login() {
 
   const [loginCheckbox, setLoginCheckbox] = useState(false);
   const navigate = useNavigate();
-  
 
   const login = async (e) => {
     e.preventDefault();
 
-
     if (!user.email || !user.password) {
-      alert('Please fill in both email and password.');
+      alert("Please fill in both email and password.");
       return;
     }
 
-
-    await fetch("http://135.181.42.192/accounts/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(user),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(a);
-      })
-      .then((data) => {
-        localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+    try {
+      const response = await fetch('http://135.181.42.192/accounts/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(user),
       });
 
-      navigate('/');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('refresh_token', data.refresh_token);
+
+      
+      navigate('/'); 
+
+    } catch (error) {
+      alert("User doesn't exist");
+      console.error('There was a problem with the fetch operation:', error);
+    }
   };
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
   return (
     <div className="section bg-[#2B75CC] h-[100vh] flex justify-center items-center">
-    <img className="absolute left-[-10px] top-[350px] z-[1]" src={oval} alt="" />
+      {/* <div className="bottom-left absolute bottom-[-100px] z-[1] left-[0] w-[500px] ">
+        <img
+        className="w-[100%] object-fill"
+          src={oval}
+          alt=""
+        />
+      </div> */}
       <div className="bg-[#fff] rounded-[20px] w-[500px] h-[550px] flex flex-col justify-center items-center z-[2]">
         <div className="text-center flex items-center gap-[20px] mb-[40px]">
           <div className="w-[100px] h-[2px] bg-[#5E5E62]"></div>

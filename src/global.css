@@ -17,9 +17,17 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
 .nunito-sans {
   font-family: "Nunito Sans", sans-serif;
 }
+
+/* .grad {
+  background-image: linear-gradient(to bottom right, #005ABF 60% , #005ABF 100%);
+} */
 
 
 
